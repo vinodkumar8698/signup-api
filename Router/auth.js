@@ -4,7 +4,9 @@ var ObjectId = require("mongodb").ObjectID;
 const bcrypt = require('bcrypt');
 require("../db/connectDB");
 
-
+router.get('/', async (req, res) => {
+  res.send("welcome to the vinodkumar college project")
+})
 router.post('/signup', async (req, res) => {
   // Validate the user's input
   const { fullname, email, password, gender } = req.body;

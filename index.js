@@ -1,10 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
-const dotenv = require("dotenv");
+require('dotenv').config()
+
 const cors = require("cors");
 
-dotenv.config({ path: "./config.env" });
 require("./db/connectDB");
 // backend server start
 app.use(express.json());
@@ -14,7 +14,7 @@ app.use(require("./Router/auth"));
 const User = require("./model/userSchema");
 // const Post = require("./model/postSchema");
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
   console.log(`server is running on port ${PORT}`);

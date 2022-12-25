@@ -1,55 +1,40 @@
 const express = require("express");
 const router = express.Router();
 var ObjectId = require("mongodb").ObjectID;
-
+const bcrypt = require('bcrypt');
 require("../db/connectDB");
 
-const User = require("../model/userSchema");
 
-// Signup Route
-
-// Async-await - procedure
-
-router.post("/singup", async (req, res) => {
-  const { fullname, username, email, password, age, pno, gender, address } =
-    req.body;
-  if (
-    (!fullname ||
-      !email ||
-      !password ||
-      !username ||
-      !gender ||
-      !fullname ||
-      !age ||
-      !pno,
-    !address)
-  ) {
-    return res.status(422).json({ error: "please filed input fill properly" });
+router.post('/signup', async (req, res) => {
+  // Validate the user's input
+  const { fullname, email, password, gender } = req.body;
+  if (!fullname || !email || !password, !gender) {
+    return res.status(400).send('Missing required fields');
   }
 
+  const User = require("../model/userSchema");
   try {
     const mailExist = await User.findOne({ email: email });
-    const usernameExist = await User.findOne({ username: username });
     if (mailExist) {
       return res.status(423).json({ error: " user already exists." });
-    } else if (usernameExist) {
-      return res.status(423).json({ error: "username is taken." });
     }
   } catch (err) {
     console.log(err);
   }
-  const user = new User({
+  // Hash the password using bcrypt
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Create a new Signup document
+  const newUser = new User({
     fullname,
-    username,
     email,
-    password,
-    age,
-    pno,
     gender,
-    address,
+    password: hashedPassword
   });
-  await user.save();
-  return res.status(200).json({ message: " Registeration successfull." });
+
+  await newUser.save()
+
+  res.status(200).send("user created successfully");
 });
 
 module.exports = router;

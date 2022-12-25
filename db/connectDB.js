@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const mongoose = require("mongoose");
 
 // Database Connection
@@ -13,5 +15,3 @@ mongoose
     console.log(`Database connected successful`);
   })
   .catch((err) => console.log(err, "no connection"));
-
-// Database Connection end
